@@ -51,7 +51,7 @@ typedef struct SortedList* SortedListPtr;
  * SLCreate creates a new, empty, 'SortedList'.
  *
  * SLCreate's parameters will be a comparator (cf) and destructor (df) function.
- *   Both the comparator and destructor functions will be defined by the user as per
+ *   Both the comparator and destructor fuhelpernctions will be defined by the user as per
  *     the prototypes above.
  *   Both functions must be stored in the SortedList struct.
  * 
