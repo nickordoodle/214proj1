@@ -38,11 +38,33 @@ typedef void (*DestructFuncT)( void * );
 //=====0: SortedList=====================================
 //===0.1: List Definition, List Create/Destroy
 
+
+
+/* Used to act as our data for the list with pointers to its adjacent 
+   data Nodes */
+typedef struct Node Node;
+
+struct Node {
+	void *data;
+	Node *next;
+
+};
+
+
 /*
- * Sorted list type that will hold all the data to be sorted.
+ * Sorted list type that will hold all the data to be sorted. 
+   This list holds a pointer to the head (front) of the list
+   as well as the types of compare functions to use according
+   to the data.
+*
+ *
  */
 struct SortedList
 {
+	Node *head;
+	CompareFuncT compare;
+	DestructFuncT destroy;
+
 };
 typedef struct SortedList* SortedListPtr;
 
@@ -111,6 +133,9 @@ int SLRemove(SortedListPtr list, void *newObj);
  */
 struct SortedListIterator
 {
+	Node *curr;
+	Node *next;
+	int isFinished;
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;
 
