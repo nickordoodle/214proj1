@@ -36,6 +36,16 @@ void SLDestroy(SortedListPtr list){
 
 }
 
+Node *createNode(void *newObj){
+
+
+	Node *newNode = malloc(sizeof(Node));
+	newNode->data = newObj;
+	newNode->next = NULL;
+	newNode->prev = NULL;
+
+	return newNode;
+}
 /* Uses the compare functions to determine where
    to place the data 
 
@@ -48,6 +58,41 @@ void SLDestroy(SortedListPtr list){
    linked lists. */
 int SLInsert(SortedListPtr list, void *newObj){
 
+	Node *temp = list->head;
+	Node *prev = temp->prev;
+	Node *next = temp->next;
+
+	void *data = temp->data;
+
+	int compareVal = list->compare(newObj, data);
+
+	Node *newNode = createNode(newObj);
+
+	/* Front of list */
+	if(temp == NULL){
+		list->head = newNode;
+		return 1;
+	} else if(next == NULL && compareVal >= 0){
+		list->head = newNode;
+		newNode->next = temp;
+		temp->prev = newNode;
+		return 1;
+	}
+
+	while(temp != NULL){
+
+		/* New object found right place */
+		if(compareVal >= 0){
+			newNode->next = temp;
+			prev->next = newNode;
+			temp->prev = newNode;
+			newNode->prev = prev;
+			return 1;
+		}
+
+		temp = next;
+		next = temp->next;
+	}
 
 
 	return 0;
@@ -55,6 +100,37 @@ int SLInsert(SortedListPtr list, void *newObj){
 
 
 int SLRemove(SortedListPtr list, void *newObj){
+
+	Node *temp = list->head;
+	Node *prev = temp->prev;
+	Node *next = temp->next;
+
+	void *data = temp->data;
+
+	int compareVal = list->compare(newObj, data);
+	
+	/* Front of list */
+	if(temp == NULL){
+		return 1;
+	} else if(next == NULL && !compareVal){
+		list->head = NULL;
+		free(temp);
+		return 1;
+	}
+
+	while(temp != NULL){
+
+		/* Object data found, delete here */
+		if(!compareVal){
+			prev->next = next;
+			next->prev = prev;
+			free(temp);
+			return 1;
+		}
+
+		temp = next;
+		next = temp->next;
+	}
 
 	return 0;
 }
