@@ -43,10 +43,10 @@ typedef void (*DestructFuncT)( void * );
 /* Used to act as our data for the list with pointers to its adjacent 
    data Nodes */
 typedef struct Node Node;
-
 struct Node {
 	void *data;
 	Node *next;
+	Node *prev;
 
 };
 
@@ -134,7 +134,6 @@ int SLRemove(SortedListPtr list, void *newObj);
 struct SortedListIterator
 {
 	Node *curr;
-	Node *next;
 	int isFinished;
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;

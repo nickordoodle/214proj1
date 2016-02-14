@@ -138,28 +138,41 @@ int SLRemove(SortedListPtr list, void *newObj){
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list){
 
-	return NULL;
+
+	SortedListIteratorPtr listPtr = (SortedListIteratorPtr) malloc(sizeof(struct SortedListIterator));
+
+	listPtr->curr = list->head;
+
+	if(list->head == NULL)
+		listPtr->isFinished = 1;
+	else
+		listPtr->isFinished = 0;
+
+	return listPtr;
 
 }
 
 
 void SLDestroyIterator(SortedListIteratorPtr iter){
 
-	return;
-
+	iter->curr = NULL;
+	free(iter->curr);
+	free(iter);
+	
 }
 
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
-	return iter;
+	void *data = iter->curr->next->data;
+	return data;
 
 
 }
 
 void * SLGetItem( SortedListIteratorPtr iter ){
 
-	return iter;
-
+	void *data = iter->curr->data;
+	return data;
 
 }
