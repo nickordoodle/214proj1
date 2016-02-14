@@ -8,9 +8,29 @@ int compareInts(int first, int second){
 
 }
 
+
+int compareFloats(float first, float second){
+
+	return 0;
+}
+
+int compareStrings(char *first, char *second){
+
+	return 0;
+}
+
+int compareStructs(int addressOne, int addressTwo){
+
+	return 0;
+}
+
 void destroyFunc(){
+
+
 	return;
 }
+
+
 int main(int argc, char const *argv[])
 {
 
