@@ -18,23 +18,25 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df){
 	return SLPtr;
 }
 
+void destroyTree(Node *node){
+
+	if (node == NULL) return;
+ 
+    /* first delete both subtrees */
+    destroyTree(node->left);
+    destroyTree(node->right);
+   
+    /* then delete the node */
+    free(node);
+
+}
 /* Do null check on list, if not null then iterate
    through the list */
 void SLDestroy(SortedListPtr list){
 
-	Node *temp = list->head;
-	Node *next = temp->next;
-
-	if(list == NULL){
-		return;
-	} 
-
-	while(temp != NULL){
-		free(temp);
-		temp = next;
-	}
-
-}
+	destroyTree(list->head);
+	
+} 
 
 Node *createNode(void *newObj, Node *parent){
 
@@ -50,25 +52,25 @@ Node *createNode(void *newObj, Node *parent){
 
 int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 
-	Node *parent = parent;
+	Node *nodeParent = parent;
 	void *nodeData = node->data;
-	int compareVal = cf(*data, *nodeData);
+	int compareVal = cf(data, nodeData);
 
     /* Empty tree, build here and successful insertion*/
     if(node == NULL){
-        createNode(data, parent);
+        createNode(data, nodeParent);
         return 1;
     }
 
     /* Insert into left subtree */
     if(compareVal < 0){
-    	parent = node;
-    	insertElement(cf, node->left, parent, data);
+    	nodeParent = node;
+    	insertNode(cf, node->left, nodeParent, data);
     } 
     /* Insert into right subtree */
     else if (compareVal > 0){   
-    	parent = node;    
-    	insertElement(cf, node->right, parent, data);
+    	nodeParent = node;    
+    	insertNode(cf, node->right, nodeParent, data);
     } 
     /* Duplicate found */
     else {
@@ -102,12 +104,12 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
     // If the key to be deleted is smaller than the root's key,
     // then it lies in left subtree
     if (compareVal < 0)
-        deleteNode(root->left, data);
+        deleteNode(cf, root->left, data);
  
     // If the key to be deleted is greater than the root's key,
     // then it lies in right subtree
     else if (compareVal > 0)
-        deleteNode(root->right, data);
+        deleteNode(cf, root->right, data);
  
     // if key is same as root's key, then This is the node
     // to be deleted
@@ -140,7 +142,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
         root->data = temp->data;
  
         // Delete the inorder successor
-        deleteNode(root->right, temp->data);
+        deleteNode(cf, root->right, temp->data);
     }
     
 
@@ -162,11 +164,11 @@ int SLInsert(SortedListPtr list, void *newObj){
 
 	/* Empty tree, make new one */
 	if(list->head == NULL){
-		list->head = createNode(newObj);
+		list->head = createNode(newObj, NULL);
 		return 1;
 	} 
 
-	returnVal = insertNode(list->compare, list->head, newObj);
+	returnVal = insertNode(list->compare, list->head, list->head, newObj);
 
 	return returnVal;
 }
@@ -174,10 +176,7 @@ int SLInsert(SortedListPtr list, void *newObj){
 
 int SLRemove(SortedListPtr list, void *newObj){
 
-	Node *temp = list->head;
-	int compareVal = list->compare(newObj, temp->data);
-
-	/* Found node, must remove */	
+	/* Look for node and delete, return 1 on success or 0 otherwise */	
 	int returnVal = deleteNode(list->compare, list->head, newObj);
 
 	return returnVal;
@@ -215,6 +214,7 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 void * SLNextItem(SortedListIteratorPtr iter){
 
 	void *data = NULL;
+	Node *curr = iter->curr;
 
 	/* Visit current */
 	if(curr->right == NULL && curr->left == NULL)
