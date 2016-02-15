@@ -6,8 +6,8 @@
 
 #include <stdlib.h>
 
-//======Prototypes for User-Defined Functions==========
-//-=-=-=-You do not need to do anything with these definitions-=-=-=-
+/*======Prototypes for User-Defined Functions==========
+-=-=-=-You do not need to do anything with these definitions-=-=-=-*/
 
 /*
  * Your list is used to store data items of an unknown type, which you need to sort.
@@ -33,10 +33,10 @@ typedef void (*DestructFuncT)( void * );
 
 
 
-//-=-=-=-You must implement all the functions and definitions below-=-=-=-
+/*-=-=-=-You must implement all the functions and definitions below-=-=-=-
 
-//=====0: SortedList=====================================
-//===0.1: List Definition, List Create/Destroy
+=====0: SortedList=====================================
+===0.1: List Definition, List Create/Destroy*/
 
 
 
@@ -92,7 +92,7 @@ void SLDestroy(SortedListPtr list);
 
 
 
-//===0.2: List Insert/Remove
+/*===0.2: List Insert/Remove*/
 
 /*
  * SLInsert inserts a given data item 'newObj' into a SortedList while maintaining the
@@ -122,8 +122,7 @@ int SLRemove(SortedListPtr list, void *newObj);
 
 
 
-//======1: SortedList Iterator============================
-//===1.1: SortedList Iterator Definition, Create/Destroy
+/*======1: SortedList Iterator============================
 
 /*
  * SortListIterator allows a SortedList to be easily 'walked' through,
@@ -162,7 +161,7 @@ void SLDestroyIterator(SortedListIteratorPtr iter);
 
 
 
-//===1.2: SortedList Iterator Get/Next Operations
+/*===1.2: SortedList Iterator Get/Next Operations*/
 
 /*
  * SLNextItem returns a pointer to the data associated with the
