@@ -36,15 +36,77 @@ void SLDestroy(SortedListPtr list){
 
 }
 
-Node *createNode(void *newObj){
+Node *createNode(void *newObj, Node *parent){
 
 
 	Node *newNode = malloc(sizeof(Node));
 	newNode->data = newObj;
-	newNode->next = NULL;
-	newNode->prev = NULL;
+	newNode->parent = parent;		
+	newNode->left = NULL;
+	newNode->right = NULL;
 
 	return newNode;
+}
+
+int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
+
+	Node *parent = parent;
+	void *nodeData = node->data;
+	int compareVal = cf(*data, *nodeData);
+
+    /* Empty tree, build here and successful insertion*/
+    if(node == NULL){
+        createNode(data, parent);
+        return 1;
+    }
+
+    /* Insert into left subtree */
+    if(compareVal < 0){
+    	parent = node;
+    	insertElement(cf, node->left, parent, data);
+    } 
+    /* Insert into right subtree */
+    else if (compareVal > 0){   
+    	parent = node;    
+    	insertElement(cf, node->right, parent, data);
+    } 
+    /* Duplicate found */
+    else {
+    	return 0;
+    }
+    
+
+    return 0;
+}
+
+/* NOT COMPLETE */
+int deleteNode(CompareFuncT cf, Node *node, void *data){
+
+
+	void *nodeData = node->data;
+	int compareVal = cf(*data, *nodeData);
+
+    /* Empty tree, build here and successful insertion*/
+    if(node == NULL){
+        createNode(data);
+        return 1;
+    }
+
+    /* Insert into left subtree */
+    if(compareVal < 0){
+       insertElement(cf, node->left, data);
+    } 
+    /* Insert into right subtree */
+    else if (compareVal > 0){       
+    	insertElement(cf, node->right, data);
+    } 
+    /* Duplicate found */
+    else {
+    	return 0;
+    }
+    
+
+    return 0;
 }
 /* Uses the compare functions to determine where
    to place the data 
@@ -58,44 +120,17 @@ Node *createNode(void *newObj){
    linked lists. */
 int SLInsert(SortedListPtr list, void *newObj){
 
-	Node *temp = list->head;
-	Node *prev = temp->prev;
-	Node *next = temp->next;
+	int returnVal = 0;
 
-	void *data = temp->data;
-
-	int compareVal = list->compare(newObj, data);
-
-	Node *newNode = createNode(newObj);
-
-	/* Front of list */
-	if(temp == NULL){
-		list->head = newNode;
+	/* Empty tree, make new one */
+	if(list->head == NULL){
+		list->head = createNode(newObj);
 		return 1;
-	} else if(next == NULL && compareVal >= 0){
-		list->head = newNode;
-		newNode->next = temp;
-		temp->prev = newNode;
-		return 1;
-	}
+	} 
 
-	while(temp != NULL){
+	returnVal = insertNode(list->compare, list->head, newObj);
 
-		/* New object found right place */
-		if(compareVal >= 0){
-			newNode->next = temp;
-			prev->next = newNode;
-			temp->prev = newNode;
-			newNode->prev = prev;
-			return 1;
-		}
-
-		temp = next;
-		next = temp->next;
-	}
-
-
-	return 0;
+	return returnVal;
 }
 
 
@@ -161,10 +196,23 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 	
 }
 
+/* Given the iterators current Node, traverse
+   right if possible, then left, or return current value */
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
-	void *data = iter->curr->next->data;
+	void *data = NULL;
+
+	/* Visit current */
+	if(curr->right == NULL && curr->left == NULL)
+		data = iter->curr->data;
+	/* Visit right */
+	else if (curr->left == NULL)
+		data = iter->curr->right->data;
+	/* Visit left */
+	else
+		data = iter->curr->left->data;
+
 	return data;
 
 
