@@ -79,30 +79,68 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     return 0;
 }
 
-/* NOT COMPLETE */
-int deleteNode(CompareFuncT cf, Node *node, void *data){
+Node *minValueNode(Node* node)
+{
+    Node* current = node;
+ 
+    /* loop down to find the leftmost leaf */
+    while (current->left != NULL)
+        current = current->left;
+ 
+    return current;
+}
 
+/* Must evaluate all three cases when there is no children,
+   one child or the most complex - two children */
+int deleteNode(CompareFuncT cf, Node *root, void *data){
 
-	void *nodeData = node->data;
-	int compareVal = cf(*data, *nodeData);
+	int compareVal = cf(data, root->data);
 
-    /* Empty tree, build here and successful insertion*/
-    if(node == NULL){
-        createNode(data);
-        return 1;
-    }
-
-    /* Insert into left subtree */
-    if(compareVal < 0){
-       insertElement(cf, node->left, data);
-    } 
-    /* Insert into right subtree */
-    else if (compareVal > 0){       
-    	insertElement(cf, node->right, data);
-    } 
-    /* Duplicate found */
-    else {
-    	return 0;
+    // base case
+    if (root == NULL) return 0;
+ 
+    // If the key to be deleted is smaller than the root's key,
+    // then it lies in left subtree
+    if (compareVal < 0)
+        deleteNode(root->left, data);
+ 
+    // If the key to be deleted is greater than the root's key,
+    // then it lies in right subtree
+    else if (compareVal > 0)
+        deleteNode(root->right, data);
+ 
+    // if key is same as root's key, then This is the node
+    // to be deleted
+    else
+    {
+        // node with only one child or no child
+        if (root->left == NULL)
+        {
+            Node *temp = root->right;
+            temp->parent = root->parent;
+            root->parent->left = temp;
+            free(root);
+            return 1;
+        }
+        else if (root->right == NULL)
+        {
+            Node *temp = root->left;
+            temp->parent = root->parent;
+            root->parent->right = temp;
+            free(root);
+            return 1;
+        }
+ 
+        // node with two children: Get the inorder successor (smallest
+        // in the right subtree)
+        Node* temp = minValueNode(root->right);
+ 
+        // Copy the inorder successor's content to this node
+        
+        root->data = temp->data;
+ 
+        // Delete the inorder successor
+        deleteNode(root->right, temp->data);
     }
     
 
@@ -137,37 +175,12 @@ int SLInsert(SortedListPtr list, void *newObj){
 int SLRemove(SortedListPtr list, void *newObj){
 
 	Node *temp = list->head;
-	Node *prev = temp->prev;
-	Node *next = temp->next;
+	int compareVal = list->compare(newObj, temp->data);
 
-	void *data = temp->data;
+	/* Found node, must remove */	
+	int returnVal = deleteNode(list->compare, list->head, newObj);
 
-	int compareVal = list->compare(newObj, data);
-	
-	/* Front of list */
-	if(temp == NULL){
-		return 1;
-	} else if(next == NULL && !compareVal){
-		list->head = NULL;
-		free(temp);
-		return 1;
-	}
-
-	while(temp != NULL){
-
-		/* Object data found, delete here */
-		if(!compareVal){
-			prev->next = next;
-			next->prev = prev;
-			free(temp);
-			return 1;
-		}
-
-		temp = next;
-		next = temp->next;
-	}
-
-	return 0;
+	return returnVal;
 }
 
 
