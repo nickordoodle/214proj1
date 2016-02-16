@@ -98,29 +98,31 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
 
 	int compareVal = cf(data, root->data);
 
-    // base case
+    /* base case*/
     if (root == NULL) return 0;
  
-    // If the key to be deleted is smaller than the root's key,
-    // then it lies in left subtree
+    /* If the key to be deleted is smaller than the root's key,
+     then it lies in left subtree*/
     if (compareVal < 0)
         deleteNode(cf, root->left, data);
  
-    // If the key to be deleted is greater than the root's key,
-    // then it lies in right subtree
+    /* If the key to be deleted is greater than the root's key,
+     then it lies in right subtree*/
     else if (compareVal > 0)
         deleteNode(cf, root->right, data);
  
-    // if key is same as root's key, then This is the node
-    // to be deleted
+    /*if key is same as root's key, then This is the node
+     to be deleted*/
     else
     {
-        // node with only one child or no child
+        /*node with only one child or no child*/
         if (root->left == NULL)
         {
-            Node *temp = root->right;
-            temp->parent = root->parent;
-            root->parent->left = temp;
+            if(root->right != NULL){
+            	Node *temp = root->right;
+            	temp->parent = root->parent;
+        	root->parent->left = temp;
+            }
             free(root);
             return 1;
         }
@@ -133,15 +135,15 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
             return 1;
         }
  
-        // node with two children: Get the inorder successor (smallest
-        // in the right subtree)
+        /* node with two children: Get the inorder successor (smallest
+         in the right subtree)*/
         Node* temp = minValueNode(root->right);
  
-        // Copy the inorder successor's content to this node
+        /* Copy the inorder successor's content to this node*/
         
         root->data = temp->data;
  
-        // Delete the inorder successor
+        /*Delete the inorder successor*/
         deleteNode(cf, root->right, temp->data);
     }
     
