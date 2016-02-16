@@ -18,6 +18,15 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df){
 	return SLPtr;
 }
 
+void printTree(Node *node){/*created for testing purposes only*/
+        if(node->left != NULL)
+                printTree(node->left);
+        printf("%d, ",(int*) node-> data);
+        if(node -> right != NULL)
+                 printTree(node->right);
+        return;
+}
+
 void destroyTree(Node *node){
 
 	if (node == NULL) return;
@@ -49,7 +58,7 @@ Node *createNode(void *newObj, Node *parent){
 
 	return newNode;
 }
-
+/*What is the purpose of parent here?*/
 int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 
 	Node *nodeParent = parent;
@@ -57,19 +66,28 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 	int compareVal = cf(data, nodeData);
 
     /* Empty tree, build here and successful insertion*/
-    if(node == NULL){
+    /*if(node == NULL){ don't think this is needed anymore
         createNode(data, nodeParent);
         return 1;
-    }
+    }*/ 
 
     /* Insert into left subtree */
     if(compareVal < 0){
     	nodeParent = node;
-    	insertNode(cf, node->left, nodeParent, data);
+    	if(node -> left  == NULL){
+                node -> left = createNode(data, nodeParent);
+                return 1;
+        }
+        else
+    		insertNode(cf, node->left, nodeParent, data);
     } 
     /* Insert into right subtree */
     else if (compareVal > 0){   
-    	nodeParent = node;    
+    	nodeParent = node;   
+    	if(node -> right == NULL){
+                node -> right = createNode(data, nodeParent);
+                return 1;
+        }
     	insertNode(cf, node->right, nodeParent, data);
     } 
     /* Duplicate found */
@@ -170,6 +188,9 @@ int SLInsert(SortedListPtr list, void *newObj){
 	} 
 
 	returnVal = insertNode(list->compare, list->head, list->head, newObj);
+	
+	printTree(list-> head);
+        printf("\n");
 
 	return returnVal;
 }
