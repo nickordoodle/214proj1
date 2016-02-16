@@ -34,7 +34,14 @@ void destroyFunc(){
 int main(int argc, char const *argv[])
 {
 
-	//SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
+	SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
+       
+        SLInsert(SLPtr,value);
+     
+
+
+        printf("%d\n",SLRemove(SLPtr,value));
+
 
 
 	return 0;
