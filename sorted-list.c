@@ -95,11 +95,10 @@ Node *minValueNode(Node* node)
 /* Must evaluate all three cases when there is no children,
    one child or the most complex - two children */
 int deleteNode(CompareFuncT cf, Node *root, void *data){
-
-	int compareVal = cf(data, root->data);
-
     /* base case*/
     if (root == NULL) return 0;
+    
+    int compareVal = cf(data, root->data);
  
     /* If the key to be deleted is smaller than the root's key,
      then it lies in left subtree*/
