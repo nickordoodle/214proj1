@@ -66,29 +66,30 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 	int compareVal = cf(data, nodeData);
 
     /* Empty tree, build here and successful insertion*/
-    /*if(node == NULL){ don't think this is needed anymore
+    if(node == NULL){ //don't think this is needed anymore
         createNode(data, nodeParent);
         return 1;
-    }*/ 
+    }
 
     /* Insert into left subtree */
     if(compareVal < 0){
-    	nodeParent = node;
+    	//nodeParent = node;
     	if(node -> left  == NULL){
                 node -> left = createNode(data, nodeParent);
                 return 1;
         }
-        else
-    		insertNode(cf, node->left, nodeParent, data);
+	
+    	insertNode(cf, node->left, nodeParent, data);
     } 
     /* Insert into right subtree */
     else if (compareVal > 0){   
-    	nodeParent = node;   
+    	//nodeParent = node;   
     	if(node -> right == NULL){
                 node -> right = createNode(data, nodeParent);
                 return 1;
         }
-    	insertNode(cf, node->right, nodeParent, data);
+    	
+        insertNode(cf, node->right, nodeParent, data);
     } 
     /* Duplicate found */
     else {
@@ -96,6 +97,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     }
     
 
+    /* CAUSING UNWANTED BEHAVIOR BECAUSE OF RECURSION CALLS */
     return 0;
 }
 
