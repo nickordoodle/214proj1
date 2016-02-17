@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "sorted-list.h"
 
 
@@ -50,7 +51,7 @@ void change(SortedListPtr SLPtr, char * type, int * ptr){
                 printf("error\n");
         else
                 printf(" unsuccessful: ");
-        printf("%d\n", ptr);
+        printf("%d\n", *ptr);
 
 
 }
@@ -63,7 +64,7 @@ int main(int argc, char const *argv[])
         int test2 = 5;
         int *value = NULL;
         int *value2 = NULL;
-        int success = -1;
+        //int success = -1;
         value = &test;
         value2 = &test2;
 

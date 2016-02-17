@@ -124,7 +124,7 @@ int SLRemove(SortedListPtr list, void *newObj);
 
 /*======1: SortedList Iterator============================
 
-/*
+ *
  * SortListIterator allows a SortedList to be easily 'walked' through,
  *  item by item using repeated calls to 'SLNextItem'.
  * Each 'SLNextItem' call to a SortedListIterator should result in the 

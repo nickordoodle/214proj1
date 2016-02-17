@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "sorted-list.h"
 
 /* Allocate memory, set data fields to appropriate values*/
@@ -21,7 +22,6 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df){
 void printTree(Node *node){/*created for testing purposes only*/
         if(node->left != NULL)
                 printTree(node->left);
-        printf("%d, ",(int*) node-> data);
         if(node -> right != NULL)
                  printTree(node->right);
         return;
