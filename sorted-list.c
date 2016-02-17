@@ -111,8 +111,9 @@ Node *minValueNode(Node* node)
 }
 
 /* Must evaluate all three cases when there is no children,
-   one child or the most complex - two children */
-int deleteNode(CompareFuncT cf, Node *root, void *data){
+   one child or the most complex - two children
+   direction is negative if it came from the left side of its part and positive if it came from the right side*/
+int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
     /* base case*/
     if (root == NULL) return 0;
     
@@ -121,12 +122,12 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
     /* If the key to be deleted is smaller than the root's key,
      then it lies in left subtree*/
     if (compareVal < 0)
-        deleteNode(cf, root->left, data);
+        deleteNode(cf, root->left, data, compareVal);
  
     /* If the key to be deleted is greater than the root's key,
      then it lies in right subtree*/
     else if (compareVal > 0)
-        deleteNode(cf, root->right, data);
+        deleteNode(cf, root->right, data, compareVal);
  
     /*if key is same as root's key, then This is the node
      to be deleted*/
@@ -136,18 +137,49 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
         if (root->left == NULL)
         {
             if(root->right != NULL){
-            	Node *temp = root->right;
-            	temp->parent = root->parent;
-        	root->parent->left = temp;
+                if(direction < 0){
+                        Node *temp = root->right;
+                        temp->parent = root->parent;
+                        root->parent->left = temp;
+                }
+                else if(direction > 0){
+                        Node *temp = root->right;
+                        temp->parent = root->parent;
+                        root->parent->left = temp;
+                }else{
+                        Node *temp = minValueNode(root->right);
+
+                        root->data = temp->data;
+
+                        deleteNode(cf, root->right, temp->data, 0);
+                }
             }
             free(root);
             return 1;
         }
         else if (root->right == NULL)
         {
-            Node *temp = root->left;
-            temp->parent = root->parent;
-            root->parent->right = temp;
+            if(root->left != NULL){
+                       if(direction < 0){
+                               Node *temp = root->left;
+                               temp->parent = root->parent;
+                               root->parent->left = temp;
+                        }
+                        else if(direction > 0){
+                                Node *temp = root->left;
+                                temp->parent = root->parent;
+                                root->parent->left = temp;
+                        }else{
+                                Node *temp = root->left; //maxValueNode(root->left);
+                                while(temp->right != NULL){
+                                        temp = temp->right;
+                                }
+
+                                root->data = temp->data;
+
+                                deleteNode(cf, root->right, temp->data, 0);
+                        }
+                }
             free(root);
             return 1;
         }
@@ -161,7 +193,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data){
         root->data = temp->data;
  
         /*Delete the inorder successor*/
-        deleteNode(cf, root->right, temp->data);
+        deleteNode(cf, root->right, temp->data, 0);
     }
     
 
@@ -199,7 +231,7 @@ int SLInsert(SortedListPtr list, void *newObj){
 int SLRemove(SortedListPtr list, void *newObj){
 
 	/* Look for node and delete, return 1 on success or 0 otherwise */	
-	int returnVal = deleteNode(list->compare, list->head, newObj);
+	int returnVal = deleteNode(list->compare, list->head, newObj, 0);
 
 	return returnVal;
 }
