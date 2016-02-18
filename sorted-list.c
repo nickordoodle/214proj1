@@ -252,7 +252,8 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list){
 
 	SortedListIteratorPtr listPtr = (SortedListIteratorPtr) malloc(sizeof(struct SortedListIterator));
 
-	listPtr->curr = list->head;
+	listPtr->head = list->head;
+    listPtr->curr = list->head;
     listPtr->type = 0;
 
 	if(list->head == NULL)
@@ -278,25 +279,24 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
+    Node *head = iter->head;
 	Node *curr = iter->curr;
     void *dataOutput = iter->curr->data;
 
     /* Need a NULL check here */
 
-    /* Visit up if subtree is finished */
-    if(curr->visited && curr->parent != NULL ){
-
-        if(curr->left == NULL || curr->left->visited == 1 ){
-            iter->curr = curr->parent;
-            dataOutput = SLNextItem(iter);
-        }
-    
-    }
     /*Visit Right */
-    else if(curr->right != NULL && !curr->right->visited){
-        curr = curr->right;
-        iter->curr = curr;
-        dataOutput = SLNextItem(iter);
+    if(curr->right != NULL){
+
+        if(!curr->right->visited && 
+            (curr->right->left != NULL 
+                &&
+            !curr->right->left->visited)){
+        
+            curr = curr->right;
+            iter->curr = curr;
+            dataOutput = SLNextItem(iter);
+        } 
     } 
     /*Visit Current */
     else if(!curr->visited){
@@ -304,12 +304,19 @@ void * SLNextItem(SortedListIteratorPtr iter){
 
     } 
     /*Visit Left */
-    else if(curr->left != NULL && !curr->left->visited){
-        curr = curr->left;
-        iter->curr = curr;
-        dataOutput = SLNextItem(iter);
+    else if(curr->left != NULL){
+
+        if(!curr->left->visited){
+            curr = curr->left;
+            iter->curr = curr;
+            dataOutput = SLNextItem(iter);           
+        }
+
     }
 
+
+    /*Reset current for future operations */
+    iter->curr = head;
 	return dataOutput;
 }
 
