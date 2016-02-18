@@ -52,6 +52,7 @@ Node *createNode(void *newObj, Node *parent){
 
 	Node *newNode = malloc(sizeof(Node));
 	newNode->data = newObj;
+    newNode->visited = 0;
 	newNode->parent = parent;		
 	newNode->left = NULL;
 	newNode->right = NULL;
@@ -278,46 +279,46 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 void * SLNextItem(SortedListIteratorPtr iter){
 
 	Node *curr = iter->curr;
-    char type = iter->type;
+    void *dataOutput = iter->curr->data;
 
-    /* Determine type for printing purposes */
-    if(type == 'i'){
-        int *outputVal = 0;
-        /* Visit current */
-        if(curr->right == NULL && curr->left == NULL)
-            outputVal = (int*)curr->data;
-        /* Visit right */
-        else if (curr->left == NULL)
-            outputVal = (int*)curr->right->data;
-        /* Visit left */
-        else
-            outputVal = (int*)curr->left->data;
-        
+    /* Need a NULL check here */
 
-        return outputVal;
+    /* Visit up if subtree is finished */
+    if(curr->visited && curr->parent != NULL ){
+
+        if(curr->left == NULL || curr->left->visited == 1 ){
+            iter->curr = curr->parent;
+            dataOutput = SLNextItem(iter);
+        }
+    
     }
-    /* case for strings */
-    else if(type == 's'){
-
+    /*Visit Right */
+    else if(curr->right != NULL && !curr->right->visited){
+        curr = curr->right;
+        iter->curr = curr;
+        dataOutput = SLNextItem(iter);
+    } 
+    /*Visit Current */
+    else if(!curr->visited){
+        dataOutput = SLGetItem(iter);
 
     } 
-    /* case for decimals */
-    else if(type == 'd'){
-
-
+    /*Visit Left */
+    else if(curr->left != NULL && !curr->left->visited){
+        curr = curr->left;
+        iter->curr = curr;
+        dataOutput = SLNextItem(iter);
     }
 
-
-
-
-	return 0;
-
-
+	return dataOutput;
 }
 
+/* Used as helper function in SLNextItem */ 
 void * SLGetItem( SortedListIteratorPtr iter ){
 
-	void *data = iter->curr->data;
-	return data;
+    /* Account for NULL values */
+
+    iter->curr->visited = 1;
+	return iter->curr->data;
 
 }

@@ -45,9 +45,9 @@ int compareStructs(int addressOne, int addressTwo){
 	return 0;
 }
 
-void destroyFunc(){
+void destroyFunc(void *data){
 
-
+        free(data);
 	return;
 }
 /* helper function for easy insertion and deletion*/
@@ -82,24 +82,27 @@ void outputTree(SortedListIteratorPtr iter){
 void testInts(){
 
 
-        int integerValues[] = {10, 32, 12, 5, 643, 3,47, 56, 3, 554, 49, 6, 99, 5};
-        int i, *ptr[13];
+        int integerValues[] = {10, 5, 643};
+        int i, *ptr[4];
+        //int *output;
 
         SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
 
-        SortedListIteratorPtr iter = SLCreateIterator(SLPtr);
-        iter->type = 'i';
+        SortedListIteratorPtr iter;
 
         /* Add all integers to Sorted List */
-        for ( i = 0; i < 13; i++) {
+        for ( i = 0; i < 3; i++) {
                 ptr[i] = &integerValues[i]; /* assign the address of integer. */
                 change(SLPtr, "Insert", ptr[i]);
 
         }
 
-        /* Test removing specific elements */
-        change(SLPtr, "Remove", ptr[i + 5]);
-        change(SLPtr, "Remove", ptr[i + 8]);
+        iter = SLCreateIterator(SLPtr);
+
+        printf("First node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Second node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Third node : %d\n",*((int *)SLNextItem(iter)));
+
         
 
         SLDestroy(SLPtr);
