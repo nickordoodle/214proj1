@@ -72,20 +72,26 @@ void change(SortedListPtr SLPtr, char * type, int * ptr){
 
 }
 
+/* Outputs values from tree */
+void outputTree(SortedListIteratorPtr iter){
+
+
+}
+
 /* Used for testing integer values */
 void testInts(){
 
 
         int integerValues[] = {10, 32, 12, 5, 643, 3,47, 56, 3, 554, 49, 6, 99, 5};
-        int i, *ptr[sizeof(integerValues)];
+        int i, *ptr[13];
 
         SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
 
         SortedListIteratorPtr iter = SLCreateIterator(SLPtr);
         iter->type = 'i';
-        
+
         /* Add all integers to Sorted List */
-        for ( i = 0; i < sizeof(integerValues); i++) {
+        for ( i = 0; i < 13; i++) {
                 ptr[i] = &integerValues[i]; /* assign the address of integer. */
                 change(SLPtr, "Insert", ptr[i]);
 
@@ -94,23 +100,41 @@ void testInts(){
         /* Test removing specific elements */
         change(SLPtr, "Remove", ptr[i + 5]);
         change(SLPtr, "Remove", ptr[i + 8]);
-
-
-
-        /* Use iterator to "walk" through the tree */
-        /* SortedListIteratorPtr iterator = SLCreateIterator(SLPtr); */
         
-
 
         SLDestroy(SLPtr);
 
 
 }
 
-/* Used to test strings */
+/* Used to test strings 
 void testStrings(){
 
-}
+        char* stringValues = {"apple", "pineapple", "oranges", "tomatoes", "apple", "potato"};
+        int i, *ptr[sizeof(integerValues)];
+
+        SortedListPtr SLPtr = SLCreate (compareStrings, destroyFunc);
+
+        SortedListIteratorPtr iter = SLCreateIterator(SLPtr);
+        iter->type = 'i';
+        */
+        /* Add all integers to Sorted List 
+        for ( i = 0; i < 5; i++) {
+                ptr[i] = &integerValues[i]; 
+                change(SLPtr, "Insert", ptr[i]);
+
+        }*/
+
+        /* Test removing specific elements */
+        //change(SLPtr, "Remove", ptr[i + 5]);
+        //change(SLPtr, "Remove", ptr[i + 8]);
+        
+
+        //SLDestroy(SLPtr);
+
+
+//} 
+
 
 int main(int argc, char const *argv[]) {
 
