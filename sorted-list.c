@@ -65,6 +65,8 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 	void *nodeData = node->data;
 	int compareVal = cf(data, nodeData);
 
+    int returnVal = 0;
+
     /* Empty tree, build here and successful insertion*/
     if(node == NULL){ //don't think this is needed anymore
         createNode(data, nodeParent);
@@ -76,29 +78,33 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     	//nodeParent = node;
     	if(node -> left  == NULL){
                 node -> left = createNode(data, nodeParent);
-                return 1;
+                returnVal = 1;
+        } else{
+            returnVal = insertNode(cf, node->left, nodeParent, data);
+
         }
 	
-    	insertNode(cf, node->left, nodeParent, data);
     } 
     /* Insert into right subtree */
     else if (compareVal > 0){   
     	//nodeParent = node;   
     	if(node -> right == NULL){
                 node -> right = createNode(data, nodeParent);
-                return 1;
+                returnVal = 1;
+        } else{
+           returnVal = insertNode(cf, node->right, nodeParent, data);
+ 
         }
     	
-        insertNode(cf, node->right, nodeParent, data);
     } 
     /* Duplicate found */
     else {
-    	return 0;
+    	returnVal = 0;
     }
     
 
     /* CAUSING UNWANTED BEHAVIOR BECAUSE OF RECURSION CALLS */
-    return 0;
+    return returnVal;
 }
 
 Node *minValueNode(Node* node)
@@ -120,16 +126,17 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
     if (root == NULL) return 0;
     
     int compareVal = cf(data, root->data);
+    int returnVal = 0;
  
     /* If the key to be deleted is smaller than the root's key,
      then it lies in left subtree*/
     if (compareVal < 0)
-        deleteNode(cf, root->left, data, compareVal);
+        returnVal = deleteNode(cf, root->left, data, compareVal);
  
     /* If the key to be deleted is greater than the root's key,
      then it lies in right subtree*/
     else if (compareVal > 0)
-        deleteNode(cf, root->right, data, compareVal);
+        returnVal = deleteNode(cf, root->right, data, compareVal);
  
     /*if key is same as root's key, then This is the node
      to be deleted*/
@@ -153,7 +160,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
 
                         root->data = temp->data;
 
-                        deleteNode(cf, root->right, temp->data, 0);
+                        returnVal = deleteNode(cf, root->right, temp->data, 0);
                 }
             }
             free(root);
@@ -179,7 +186,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
 
                                 root->data = temp->data;
 
-                                deleteNode(cf, root->right, temp->data, 0);
+                                returnVal = deleteNode(cf, root->right, temp->data, 0);
                         }
                 }
             free(root);
@@ -195,11 +202,11 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
         root->data = temp->data;
  
         /*Delete the inorder successor*/
-        deleteNode(cf, root->right, temp->data, 0);
+        returnVal = deleteNode(cf, root->right, temp->data, 0);
     }
     
 
-    return 0;
+    return returnVal;
 }
 /* Uses the compare functions to determine where
    to place the data 
