@@ -1,14 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "sorted-list.h"
 
 
 int compareInts(void* firstArg, void * secondArg){
         int *firstInt = (int*)firstArg;
         int *secondInt = (int*)secondArg;
-        int value = *firstInt-*secondInt;
 
-        return value;
+        if(*firstInt > *secondInt)
+                return 1;
+        else if(*firstInt < *secondInt)
+                return -1;
+
+
+        return 0;
 
 }
 
@@ -20,6 +26,16 @@ int compareFloats(float first, float second){
 }
 
 int compareStrings(char *first, char *second){
+
+        int compareVal = strcmp(first, second);
+
+        if(compareVal > 0){
+                return 1;
+        } else if(compareVal < 0){
+                return -1;
+        } else {
+                return 0;
+        }
 
 	return 0;
 }
@@ -56,26 +72,51 @@ void change(SortedListPtr SLPtr, char * type, int * ptr){
 
 }
 
+/* Used for testing integer values */
+void testInts(){
 
-int main(int argc, char const *argv[])
-{
 
-	int test = 1;
-        int test2 = 5;
-        int *value = NULL;
-        int *value2 = NULL;
-        //int success = -1;
-        value = &test;
-        value2 = &test2;
+        int integerValues[] = {10, 32, 12, 5, 643, 3,47, 56, 3, 554, 49, 6, 99, 5};
+        int i, *ptr[sizeof(integerValues)];
 
         SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
-        //printf("%d\n",SLPtr->data);
-        //success = SLInsert(SLPtr,value);
 
-        change(SLPtr, "Insert", value);
-        //printf("%d",SLInsert(SLPtr,value));
-        change(SLPtr, "Insert", value2);
-        change(SLPtr, "Remove", value);
+        SortedListIteratorPtr iter = SLCreateIterator(SLPtr);
+        iter->type = 'i';
+        
+        /* Add all integers to Sorted List */
+        for ( i = 0; i < sizeof(integerValues); i++) {
+                ptr[i] = &integerValues[i]; /* assign the address of integer. */
+                change(SLPtr, "Insert", ptr[i]);
+
+        }
+
+        /* Test removing specific elements */
+        change(SLPtr, "Remove", ptr[i + 5]);
+        change(SLPtr, "Remove", ptr[i + 8]);
+
+
+
+        /* Use iterator to "walk" through the tree */
+        /* SortedListIteratorPtr iterator = SLCreateIterator(SLPtr); */
+        
+
+
+        SLDestroy(SLPtr);
+
+
+}
+
+/* Used to test strings */
+void testStrings(){
+
+}
+
+int main(int argc, char const *argv[]) {
+
+
+        testInts();
+
 
 	return 0;
 }

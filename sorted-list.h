@@ -134,6 +134,7 @@ int SLRemove(SortedListPtr list, void *newObj);
 struct SortedListIterator
 {
 	Node *curr;
+	char type;
 	int isFinished;
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;

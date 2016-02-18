@@ -69,7 +69,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 
     /* Empty tree, build here and successful insertion*/
     if(node == NULL){ //don't think this is needed anymore
-        createNode(data, nodeParent);
+        node = createNode(data, nodeParent);
         return 1;
     }
 
@@ -252,6 +252,7 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list){
 	SortedListIteratorPtr listPtr = (SortedListIteratorPtr) malloc(sizeof(struct SortedListIterator));
 
 	listPtr->curr = list->head;
+    listPtr->type = 0;
 
 	if(list->head == NULL)
 		listPtr->isFinished = 1;
@@ -276,20 +277,40 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
-	void *data = NULL;
 	Node *curr = iter->curr;
+    char type = iter->type;
 
-	/* Visit current */
-	if(curr->right == NULL && curr->left == NULL)
-		data = iter->curr->data;
-	/* Visit right */
-	else if (curr->left == NULL)
-		data = iter->curr->right->data;
-	/* Visit left */
-	else
-		data = iter->curr->left->data;
+    /* Determine type for printing purposes */
+    if(type == 'i'){
+        int *outputVal = 0;
+        /* Visit current */
+        if(curr->right == NULL && curr->left == NULL)
+            outputVal = (int*)curr->data;
+        /* Visit right */
+        else if (curr->left == NULL)
+            outputVal = (int*)curr->right->data;
+        /* Visit left */
+        else
+            outputVal = (int*)curr->left->data;
+        
 
-	return data;
+        return outputVal;
+    }
+    /* case for strings */
+    else if(type == 's'){
+
+
+    } 
+    /* case for decimals */
+    else if(type == 'd'){
+
+
+    }
+
+
+
+
+	return 0;
 
 
 }
