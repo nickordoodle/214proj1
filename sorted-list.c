@@ -274,29 +274,46 @@ void SLDestroyIterator(SortedListIteratorPtr iter){
 	
 }
 
+/*
+int checkSubtree(Node *subtreeNode){
+
+    
+}*/
 /* Given the iterators current Node, traverse
    right if possible, then left, or return current value */
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
-    Node *head = iter->head;
+    //Node *head = iter->head;
 	Node *curr = iter->curr;
-    void *dataOutput = iter->curr->data;
+    void *dataOutput;
+    //int isSubtreeDone = checkSubtree(curr->right);
 
     /* Need a NULL check here */
+    
+    if( (curr->right == NULL || curr->right->visited)
+        &&
+        (curr->left == NULL || curr->left->visited)
+        ){
 
-    /*Visit Right */
-    if(curr->right != NULL){
-
-        if(!curr->right->visited && 
-            (curr->right->left != NULL 
-                &&
-            !curr->right->left->visited)){
-        
-            curr = curr->right;
+        if(!curr->visited){
+            dataOutput = SLGetItem(iter);
+        } else {
+            curr = curr->parent;
             iter->curr = curr;
             dataOutput = SLNextItem(iter);
-        } 
+
+        }
+
+       
+    }
+    /*Visit Right */
+    else if(curr->right != NULL ){
+        
+        curr = curr->right;
+        iter->curr = curr;
+        dataOutput = SLNextItem(iter);
+        
     } 
     /*Visit Current */
     else if(!curr->visited){
@@ -306,17 +323,14 @@ void * SLNextItem(SortedListIteratorPtr iter){
     /*Visit Left */
     else if(curr->left != NULL){
 
-        if(!curr->left->visited){
-            curr = curr->left;
-            iter->curr = curr;
-            dataOutput = SLNextItem(iter);           
-        }
+        curr = curr->left;
+        iter->curr = curr;
+        dataOutput = SLNextItem(iter);           
 
     }
 
 
     /*Reset current for future operations */
-    iter->curr = head;
 	return dataOutput;
 }
 
@@ -324,8 +338,9 @@ void * SLNextItem(SortedListIteratorPtr iter){
 void * SLGetItem( SortedListIteratorPtr iter ){
 
     /* Account for NULL values */
-
+    void *returnVal = iter->curr->data;
     iter->curr->visited = 1;
-	return iter->curr->data;
+    iter->curr = iter->head;
+	return returnVal;
 
 }
