@@ -69,14 +69,14 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     int returnVal = 0;
 
     /* Empty tree, build here and successful insertion*/
-    if(node == NULL){ //don't think this is needed anymore
+    if(node == NULL){ /*don't think this is needed anymore*/
         node = createNode(data, nodeParent);
         return 1;
     }
 
     /* Insert into left subtree */
     if(compareVal < 0){
-    	//nodeParent = node;
+    	/*nodeParent = node;*/
     	if(node -> left  == NULL){
                 node -> left = createNode(data, nodeParent);
                 returnVal = 1;
@@ -88,7 +88,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     } 
     /* Insert into right subtree */
     else if (compareVal > 0){   
-    	//nodeParent = node;   
+    	/*nodeParent = node;   */
     	if(node -> right == NULL){
                 node -> right = createNode(data, nodeParent);
                 returnVal = 1;
@@ -180,7 +180,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
                                 temp->parent = root->parent;
                                 root->parent->left = temp;
                         }else{
-                                Node *temp = root->left; //maxValueNode(root->left);
+                                Node *temp = root->left; /*maxValueNode(root->left);*/
                                 while(temp->right != NULL){
                                         temp = temp->right;
                                 }
