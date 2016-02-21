@@ -70,7 +70,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
 
     /* Empty tree, build here and successful insertion*/
     if(node == NULL){ /*don't think this is needed anymore*/
-        node = createNode(data, nodeParent);
+        node = createNode(data, node);
         return 1;
     }
 
@@ -78,7 +78,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     if(compareVal < 0){
     	/*nodeParent = node;*/
     	if(node -> left  == NULL){
-                node -> left = createNode(data, nodeParent);
+                node -> left = createNode(data, node);
                 returnVal = 1;
         } else{
             returnVal = insertNode(cf, node->left, nodeParent, data);
