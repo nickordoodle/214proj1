@@ -45,7 +45,7 @@ int compareStructs(int addressOne, int addressTwo){
 	return 0;
 }
 
-void destroyFunc(void *data){
+void destroyFunc(void *data){	
 
         free(data);
 	return;
@@ -54,7 +54,7 @@ void destroyFunc(void *data){
 void change(SortedListPtr SLPtr, char * type, int * ptr){
         int success  = -1;
 
-        if(*type == 'i' || *type == 'I')//insert check
+        if(*type == 'i' || *type == 'I')
                 success = SLInsert(SLPtr,ptr);
         if(*type == 'r' || *type == 'R')
                 success = SLRemove(SLPtr,ptr);
@@ -84,7 +84,7 @@ void testInts(){
 
         int integerValues[] = {10, 5, 643, 40, 72};
         int i, *ptr[6];
-        //int *output;
+        /*int *output;*/
 
         SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
 
@@ -130,14 +130,14 @@ void testStrings(){
         }*/
 
         /* Test removing specific elements */
-        //change(SLPtr, "Remove", ptr[i + 5]);
-        //change(SLPtr, "Remove", ptr[i + 8]);
+        /*change(SLPtr, "Remove", ptr[i + 5]);*/
+        /change(SLPtr, "Remove", ptr[i + 8]);*/
         
 
-        //SLDestroy(SLPtr);
+        /*SLDestroy(SLPtr);*/
 
 
-//} 
+/*}*/ 
 
 
 int main(int argc, char const *argv[]) {
