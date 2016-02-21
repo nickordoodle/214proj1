@@ -282,7 +282,7 @@ int checkSubtree(Node *subtreeNode){
 /* Given the iterators current Node, traverse
    right if possible, then left, or return current value */
 
-vvoid * SLNextItem(SortedListIteratorPtr iter){
+void * SLNextItem(SortedListIteratorPtr iter){
 
     /*Node *head = iter->head;*/
         Node *curr = iter->curr;

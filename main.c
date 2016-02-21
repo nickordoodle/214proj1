@@ -131,7 +131,7 @@ void testStrings(){
 
         /* Test removing specific elements */
         /*change(SLPtr, "Remove", ptr[i + 5]);*/
-        /change(SLPtr, "Remove", ptr[i + 8]);*/
+        /*change(SLPtr, "Remove", ptr[i + 8]);*/
         
 
         /*SLDestroy(SLPtr);*/
