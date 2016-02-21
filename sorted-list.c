@@ -127,69 +127,95 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
     if (root == NULL) return 0;
     
     int compareVal = cf(data, root->data);
-    int returnVal = 0;
+    //int returnVal = 0;
  
     /* If the key to be deleted is smaller than the root's key,
      then it lies in left subtree*/
     if (compareVal < 0)
-        returnVal = deleteNode(cf, root->left, data, compareVal);
+        return deleteNode(cf, root->left, data, compareVal);
  
     /* If the key to be deleted is greater than the root's key,
      then it lies in right subtree*/
     else if (compareVal > 0)
-        returnVal = deleteNode(cf, root->right, data, compareVal);
+        return deleteNode(cf, root->right, data, compareVal);
  
     /*if key is same as root's key, then This is the node
      to be deleted*/
     else
     {
-        /*node with only one child or no child*/
-        if (root->left == NULL)
-        {
-            if(root->right != NULL){
-                if(direction < 0){
-                        Node *temp = root->right;
-                        temp->parent = root->parent;
-                        root->parent->left = temp;
+        /* No children */
+        if(root->left == NULL && root->right == NULL){
+
+            /* To account for deleting head where parent is NULL */
+            if(root->parent != NULL){
+               if(direction < 0){
+                    root->parent->left = NULL;
                 }
                 else if(direction > 0){
-                        Node *temp = root->right;
-                        temp->parent = root->parent;
-                        root->parent->left = temp;
-                }else{
-                        Node *temp = minValueNode(root->right);
-
-                        root->data = temp->data;
-
-                        returnVal = deleteNode(cf, root->right, temp->data, 0);
+                    root->parent->right = NULL;
                 }
             }
+
             free(root);
             return 1;
         }
-        else if (root->right == NULL)
+        /*node with only one child or no child*/
+        else if (root->left == NULL && root->right != NULL)
         {
-            if(root->left != NULL){
-                       if(direction < 0){
-                               Node *temp = root->left;
-                               temp->parent = root->parent;
-                               root->parent->left = temp;
-                        }
-                        else if(direction > 0){
-                                Node *temp = root->left;
-                                temp->parent = root->parent;
-                                root->parent->left = temp;
-                        }else{
-                                Node *temp = root->left; /*maxValueNode(root->left);*/
-                                while(temp->right != NULL){
-                                        temp = temp->right;
-                                }
 
-                                root->data = temp->data;
-
-                                returnVal = deleteNode(cf, root->right, temp->data, 0);
-                        }
+            if(root->parent != NULL){
+                if(direction < 0){
+                    Node *temp = root->right;
+                    temp->parent = root->parent;
+                    root->parent->left = temp;
                 }
+                else if(direction > 0){
+                    Node *temp = root->right;
+                    temp->parent = root->parent;
+                    root->parent->right = temp;
+                }else{
+                    Node *temp = minValueNode(root->right);
+
+                    root->data = temp->data;
+
+                    return deleteNode(cf, root->right, temp->data, 0);
+                }
+
+            }
+
+
+            root = NULL;
+            free(root);
+            return 1;
+            
+
+        }
+        else if (root->right == NULL && root->left != NULL)
+        {
+            if(root->parent != NULL){
+                if(direction < 0){
+                    Node *temp = root->left;
+                    temp->parent = root->parent;
+                    root->parent->left = temp;
+                }
+                else if(direction > 0){
+                    Node *temp = root->left;
+                    temp->parent = root->parent;
+                    root->parent->left = temp;
+                }else{
+                    Node *temp = root->left; /*maxValueNode(root->left);*/
+                    while(temp->right != NULL){
+                            temp = temp->right;
+                    }
+
+                    root->data = temp->data;
+
+                    return deleteNode(cf, root->right, temp->data, 0);
+                }
+            }
+                     
+                
+            root = NULL;
             free(root);
             return 1;
         }
@@ -203,12 +229,14 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
         root->data = temp->data;
  
         /*Delete the inorder successor*/
-        returnVal = deleteNode(cf, root->right, temp->data, 0);
+        return deleteNode(cf, root->right, temp->data, 0);
     }
     
 
-    return returnVal;
+    return 0;
 }
+
+
 /* Uses the compare functions to determine where
    to place the data 
 
@@ -284,40 +312,39 @@ int checkSubtree(Node *subtreeNode){
 
 void * SLNextItem(SortedListIteratorPtr iter){
 
-    /*Node *head = iter->head;*/
-        Node *curr = iter->curr;
-    void *dataOutput;
+    Node *curr = iter->curr;
+    //void *dataOutput;
 
-/*Visit Right */
-
+    /*Visit Right */
     if(curr->right != NULL){
         if( curr->right->visited != 1){
         curr = curr->right;
         iter->curr = curr;
-        dataOutput = SLNextItem(iter);
-        return dataOutput;
+        return SLNextItem(iter);
        }
     }
     /*Visit Current */
     if(!curr->visited){
-        dataOutput = SLGetItem(iter);
-        return dataOutput;
+        return SLGetItem(iter);
     }
-        if(curr->left != NULL){
+    /* Visit Left */
+    if(curr->left != NULL){
 
         if( curr->left->visited != 1){
-        curr = curr->left;
-        iter->curr = curr;
-        dataOutput = SLNextItem(iter);
-        return dataOutput;
+            curr = curr->left;
+            iter->curr = curr;
+            return SLNextItem(iter);
         }
-    } /*entire branch has been visited go to parent*/
+    } 
+
+    /*entire branch has been visited go to parent*/
+    if(curr->parent != NULL){
         iter->curr = curr->parent;
-        dataOutput = SLNextItem(iter);
+        return SLNextItem(iter);
+    }
 
 
-   /*Reset current for future operations */
-        return dataOutput;
+    return NULL;
 }
 
 

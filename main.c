@@ -82,8 +82,8 @@ void outputTree(SortedListIteratorPtr iter){
 void testInts(){
 
 
-        int integerValues[] = {10, 5, 643, 40, 72};
-        int i, *ptr[6];
+        int integerValues[] = {10, 5, 643, 40, 72, 100, 4320, 3, 54, 43, 72, 40, 9923};
+        int i, *ptr[14];
         /*int *output;*/
 
         SortedListPtr SLPtr = SLCreate (compareInts, destroyFunc);
@@ -91,7 +91,7 @@ void testInts(){
         SortedListIteratorPtr iter;
 
         /* Add all integers to Sorted List */
-        for ( i = 0; i < 5; i++) {
+        for ( i = 0; i < 13; i++) {
                 ptr[i] = &integerValues[i]; /* assign the address of integer. */
                 change(SLPtr, "Insert", ptr[i]);
 
@@ -99,12 +99,21 @@ void testInts(){
 
         iter = SLCreateIterator(SLPtr);
 
-        printf("First node : %d\n",*((int *)SLNextItem(iter)));
-        printf("Second node : %d\n",*((int *)SLNextItem(iter)));
-        printf("Third node : %d\n",*((int *)SLNextItem(iter)));
-        printf("Fourth node : %d\n",*((int *)SLNextItem(iter)));
-        printf("Fifth node : %d\n",*((int *)SLNextItem(iter)));
-        
+        change(SLPtr, "Remove", ptr[3]);
+        change(SLPtr, "Remove", ptr[0]);
+
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+        printf("Node : %d\n",*((int *)SLNextItem(iter)));
+
+
+
+
 
         SLDestroy(SLPtr);
 
