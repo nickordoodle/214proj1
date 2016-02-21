@@ -90,7 +90,7 @@ int insertNode(CompareFuncT cf, Node *node, Node *parent, void *data){
     else if (compareVal > 0){   
     	/*nodeParent = node;   */
     	if(node -> right == NULL){
-                node -> right = createNode(data, nodeParent);
+                node -> right = createNode(data, node);
                 returnVal = 1;
         } else{
            returnVal = insertNode(cf, node->right, nodeParent, data);
