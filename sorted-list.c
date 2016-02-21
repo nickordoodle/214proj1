@@ -282,57 +282,44 @@ int checkSubtree(Node *subtreeNode){
 /* Given the iterators current Node, traverse
    right if possible, then left, or return current value */
 
-void * SLNextItem(SortedListIteratorPtr iter){
+vvoid * SLNextItem(SortedListIteratorPtr iter){
 
-    //Node *head = iter->head;
-	Node *curr = iter->curr;
+    /*Node *head = iter->head;*/
+        Node *curr = iter->curr;
     void *dataOutput;
-    //int isSubtreeDone = checkSubtree(curr->right);
 
-    /* Need a NULL check here */
-    
-    if( (curr->right == NULL || curr->right->visited)
-        &&
-        (curr->left == NULL || curr->left->visited)
-        ){
+/*Visit Right */
 
-        if(!curr->visited){
-            dataOutput = SLGetItem(iter);
-        } else {
-            curr = curr->parent;
-            iter->curr = curr;
-            dataOutput = SLNextItem(iter);
-
-        }
-
-       
-    }
-    /*Visit Right */
-    else if(curr->right != NULL ){
-        
+    if(curr->right != NULL){
+        if( curr->right->visited != 1){
         curr = curr->right;
         iter->curr = curr;
         dataOutput = SLNextItem(iter);
-        
-    } 
+        return dataOutput;
+       }
+    }
     /*Visit Current */
-    else if(!curr->visited){
+    if(!curr->visited){
         dataOutput = SLGetItem(iter);
+        return dataOutput;
+    }
+        if(curr->left != NULL){
 
-    } 
-    /*Visit Left */
-    else if(curr->left != NULL){
-
+        if( curr->left->visited != 1){
         curr = curr->left;
         iter->curr = curr;
-        dataOutput = SLNextItem(iter);           
+        dataOutput = SLNextItem(iter);
+        return dataOutput;
+        }
+    } /*entire branch has been visited go to parent*/
+        iter->curr = curr->parent;
+        dataOutput = SLNextItem(iter);
 
-    }
 
-
-    /*Reset current for future operations */
-	return dataOutput;
+   /*Reset current for future operations */
+        return dataOutput;
 }
+
 
 /* Used as helper function in SLNextItem */ 
 void * SLGetItem( SortedListIteratorPtr iter ){
@@ -340,7 +327,7 @@ void * SLGetItem( SortedListIteratorPtr iter ){
     /* Account for NULL values */
     void *returnVal = iter->curr->data;
     iter->curr->visited = 1;
-    iter->curr = iter->head;
+  
 	return returnVal;
 
 }
