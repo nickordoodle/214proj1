@@ -127,7 +127,7 @@ int deleteNode(CompareFuncT cf, Node *root, void *data, int direction){
     if (root == NULL) return 0;
     
     int compareVal = cf(data, root->data);
-    //int returnVal = 0;
+    /*int returnVal = 0;*/
  
     /* If the key to be deleted is smaller than the root's key,
      then it lies in left subtree*/
@@ -313,7 +313,7 @@ int checkSubtree(Node *subtreeNode){
 void * SLNextItem(SortedListIteratorPtr iter){
 
     Node *curr = iter->curr;
-    //void *dataOutput;
+    /*void *dataOutput;*/
 
     /*Visit Right */
     if(curr->right != NULL){
