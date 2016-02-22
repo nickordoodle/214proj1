@@ -134,10 +134,13 @@ int SLRemove(SortedListPtr list, void *newObj);
  */
 struct SortedListIterator
 {
-	Node *head;
-	Node *curr;
-	char type;
-	int isFinished;
+  	Node *head;
+        Node *curr;
+        void *startData;
+        char type;
+        int isFinished;
+        CompareFuncT compare;
+
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;
 
