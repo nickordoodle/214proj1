@@ -283,6 +283,8 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list){
 	listPtr->head = list->head;
     listPtr->curr = list->head;
     listPtr->type = 0;
+	listPtr->compare = list->compare;
+        listPtr->startData= NULL;
 
 	if(list->head == NULL)
 		listPtr->isFinished = 1;
@@ -311,41 +313,46 @@ int checkSubtree(Node *subtreeNode){
    right if possible, then left, or return current value */
 
 void * SLNextItem(SortedListIteratorPtr iter){
+    /*Node *head = iter->head;*/
+        Node *curr = iter->curr;
+    void *dataOutput;
+        if(iter->startData == NULL){
+                while(curr->right != NULL){
+                        curr = curr->right;
+                }
+                iter->curr = curr;
+                iter->startData = curr->data;
+                dataOutput = SLGetItem(iter);
+                return dataOutput;
 
-    Node *curr = iter->curr;
-    /*void *dataOutput;*/
-
-    /*Visit Right */
-    if(curr->right != NULL){
-        if( curr->right->visited != 1){
-        curr = curr->right;
-        iter->curr = curr;
-        return SLNextItem(iter);
-       }
+        }
+ if(curr->right != NULL){
+        if(iter->compare(iter->startData, curr->right->data) == 1){
+                curr = curr->right;
+                iter->curr = curr;
+                dataOutput = SLNextItem(iter);
+                return dataOutput;
+        }
     }
     /*Visit Current */
-    if(!curr->visited){
-        return SLGetItem(iter);
+    if(iter->compare(iter->startData, curr->data) == 1){
+        dataOutput = SLGetItem(iter);
+        return dataOutput;
     }
-    /* Visit Left */
-    if(curr->left != NULL){
-
-        if( curr->left->visited != 1){
-            curr = curr->left;
-            iter->curr = curr;
-            return SLNextItem(iter);
+        if(curr->left != NULL){
+        if(iter->compare(iter->startData, curr->left->data) == 1){
+        curr = curr->left;
+        iter->curr = curr;
+        dataOutput = SLNextItem(iter);
+        return dataOutput;
         }
-    } 
-
-    /*entire branch has been visited go to parent*/
-    if(curr->parent != NULL){
-        iter->curr = curr->parent;
-        return SLNextItem(iter);
     }
-
-
-    return NULL;
+        iter->curr = curr->parent;
+        dataOutput = SLNextItem(iter);
+   /*Reset current for future operations */
+        return dataOutput;
 }
+
 
 
 /* Used as helper function in SLNextItem */ 
@@ -353,8 +360,8 @@ void * SLGetItem( SortedListIteratorPtr iter ){
 
     /* Account for NULL values */
     void *returnVal = iter->curr->data;
-    iter->curr->visited = 1;
-  
-	return returnVal;
+        iter->startData = iter->curr->data;/*remembers the last data looked at*/
+        return returnVal;
 
 }
+
