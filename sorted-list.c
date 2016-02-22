@@ -259,8 +259,6 @@ int SLInsert(SortedListPtr list, void *newObj){
 
 	returnVal = insertNode(list->compare, list->head, list->head, newObj);
 	
-	printTree(list-> head);
-        printf("\n");
 
 	return returnVal;
 }
@@ -326,7 +324,7 @@ void * SLNextItem(SortedListIteratorPtr iter){
                 return dataOutput;
 
         }
- if(curr->right != NULL){
+    if(curr->right != NULL){
         if(iter->compare(iter->startData, curr->right->data) == 1){
                 curr = curr->right;
                 iter->curr = curr;
@@ -347,10 +345,11 @@ void * SLNextItem(SortedListIteratorPtr iter){
         return dataOutput;
         }
     }
-        iter->curr = curr->parent;
-        dataOutput = SLNextItem(iter);
+    
+    iter->curr = curr->parent;
+    dataOutput = SLNextItem(iter);
    /*Reset current for future operations */
-        return dataOutput;
+    return dataOutput;
 }
 
 
